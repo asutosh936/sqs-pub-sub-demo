@@ -1,0 +1,40 @@
+# Java / Maven
+# Ignore Maven build output directory
+/target/
+
+# Maven Wrapper JAR (keep wrapper scripts, ignore binary)
+!.mvn/wrapper/maven-wrapper.jar
+
+# IDE specific files
+.idea/
+*.iml
+out/
+
+# Visual Studio Code workspace settings
+.vscode/
+
+# Logs
+*.log
+
+# OS / tooling noise
+.DS_Store
+Thumbs.db
+
+# Eclipse specific
+.classpath
+.project
+.settings/
+
+# IntelliJ modules
+*.iws
+
+# NetBeans
+/nbproject/private/
+/build/
+/dist/
+
+# VS Code build tasks
+.vscode/*.*
+
+# Generated test reports
+surefire-reports/
