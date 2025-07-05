@@ -74,5 +74,57 @@ mvn test -Dkarate.options="--tags @debug"
 
 ---
 
+## Performance Testing (k6)
+
+`performance/load-test.js` generates continuous traffic against the `/api/sqs/send` endpoint and verifies that each request returns HTTP 200.
+
+### Install k6
+
+Mac (Homebrew):
+```bash
+brew install k6
+```
+Ubuntu / Debian:
+```bash
+sudo apt install -y gnupg ca-certificates && \
+curl -fsSL https://dl.k6.io/key.gpg | sudo tee /etc/apt/trusted.gpg.d/k6.asc >/dev/null && \
+echo "deb https://dl.k6.io/deb stable main" | sudo tee /etc/apt/sources.list.d/k6.list && \
+sudo apt update && sudo apt install k6
+```
+Windows (Chocolatey):
+```powershell
+choco install k6
+```
+Alternatively run via Docker:
+```bash
+docker run -i loadimpact/k6 run - < performance/load-test.js
+```
+
+### Running the test
+
+Start your Spring Boot app (or ensure it is already running):
+```bash
+mvn spring-boot:run
+```
+
+Then from another terminal execute:
+```bash
+# 30-second smoke test with 10 virtual users (defaults)
+k6 run performance/load-test.js
+
+# Heavier 5-minute test with 100 VUs
+k6 run -e TEST_DURATION=5m -e VUS=100 performance/load-test.js
+```
+Environment variables:
+* `BASE_URL` – service base URL (default `http://localhost:8080`)
+* `TEST_DURATION` – total duration, e.g. `2m`, `30s`
+* `VUS` – number of concurrent virtual users
+
+Thresholds inside the script will fail the test if
+* `http_req_failed` ≥ 1 %
+* 95th percentile latency ≥ 500 ms
+
+---
+
 
 
