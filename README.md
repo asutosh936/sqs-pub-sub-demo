@@ -44,17 +44,35 @@ curl -X POST http://localhost:8080/api/sqs/send \
      -d 'Hello from Spring Boot & SQS!'
 ```
 
-## Security
+## Automated API Tests (Karate)
 
-The build incorporates the OWASP `dependency-check` Maven plugin. The build will fail if any transitive dependency has a CVSS score ≥ 7.
+Karate files live under the root-level `Test` folder so they remain separate from normal unit tests:
 
-To generate a full HTML report:
-
-```bash
-mvn dependency-check:aggregate
+```
+Test/
+├── java/com/example/sqs/SqsKarateTest.java   # JUnit 5 runner
+├── java/com/example/sqs/sqs.feature          # Scenario(s)
+└── resources/karate-config.js                # Global Karate config
 ```
 
-## License
+The feature sends a POST request to `/api/sqs/send` and asserts an HTTP `200` status while the
+background Spring thread consumes the message from the same queue.
 
-MIT
+Run all Karate tests with Maven (the Spring app is auto-started on port 8080 for the duration):
+
+```bash
+mvn test
+```
+
+You should see output like `Karate version: 1.4.1 | pass: 1, fail: 0`.
+
+To debug a single scenario, add `@debug` to the scenario and run:
+
+```bash
+mvn test -Dkarate.options="--tags @debug"
+```
+
+---
+
+
 

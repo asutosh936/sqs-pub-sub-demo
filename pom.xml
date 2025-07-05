@@ -22,6 +22,7 @@
 
     <properties>
         <java.version>17</java.version>
+        <karate.version>1.4.1</karate.version>
         <!-- Import AWS SDK BOM to align versions -->
         <aws.sdk.version>2.25.61</aws.sdk.version>
         <!-- Enforce dependency-check to verify vulnerabilities during build -->
@@ -72,6 +73,14 @@
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
+
+        <!-- Karate for API testing -->
+        <dependency>
+            <groupId>com.intuit.karate</groupId>
+            <artifactId>karate-junit5</artifactId>
+            <version>${karate.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -96,6 +105,29 @@
                     </execution>
                 </executions>
             </plugin> -->
+            <!-- Add Test directory as additional test source -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>3.5.0</version>
+                <executions>
+                    <execution>
+                        <id>add-test-source</id>
+                        <phase>generate-test-sources</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${project.basedir}/Test/java</source>
+                            </sources>
+                        <testResources>
+                            <testResource>${project.basedir}/Test/resources</testResource>
+                        </testResources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
 
